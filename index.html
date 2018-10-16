@@ -252,6 +252,1607 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TangLingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唐凌肖">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/16/eff-7/" itemprop="url">模板与泛型编程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:27:26+08:00">
+                2018-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Effective C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/16/eff-7/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-7/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/10/16/eff-7/" class="leancloud_visitors" data-flag-title="模板与泛型编程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>了解隐式接口和编译期多态</p>
+<ul>
+<li><p>classes 和 templates 都支持接口和多态。</p>
+</li>
+<li><p>对 classes 而言接口是显式的，以函数签名为中心。多态则是通过 virtual 函数发生于运行期。</p>
+</li>
+<li>对 templates 参数而言，接口是隐式的，奠基于有效表达式。多态则是通过 template 具现化和函数重载解析发生于编译期。</li>
+</ul>
+</li>
+<li><p>了解 typename 的双重意义</p>
+<ul>
+<li><p>声明 template 参数时，前缀关键字 class 和 typename 可互换</p>
+</li>
+<li><p>请使用关键字 typename 标识嵌套从属类型名称；但不得在 base class lists（基类列）或 member initialization list（成员初值列）内以它作为 base class 修饰符。</p>
+</li>
+<li><ul>
+<li><p>下面的例子，在我们知道 C 是什么之前，没有办法知道 C::const_iterator 是否为一个类型，在缺省情况下 C++ 将其视为变量而不是类型。这时必须在它前面放置关键字 typename。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> C&gt;<span class="comment">//C是一个 STL 兼容容器。</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print2nd</span><span class="params">(<span class="keyword">const</span> C&amp; container)</span></span>&#123;</span><br><span class="line">    C::const_iterator* x;<span class="comment">//C::const_iterator实际上是嵌套从属类型//被视为乘法操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上述规则的例外是，typename 不可以出现在 base classes list 内的嵌套从属类型名称之前，也不可在 member initialization list 中作为 base class 修饰符。例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span>:</span> <span class="keyword">public</span> Base&lt;T&gt;::Nested&#123;<span class="comment">//base class list 中不允许 typename</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    explicit Derived(int x):Base&lt;T&gt;::Nested(x)//初始化列表不允许 typename</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">typename</span> Base&lt;T&gt;::Nested temp;</span><br><span class="line">        <span class="comment">//既不在基类列也不再初始化列表，可以加typename</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;；</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>学习处理模板化基类内的名称</p>
+<ul>
+<li><p>可在 derived class template 内通过 this-&gt; 指向 base class template 内的成员名称，或一个明白写出的 base class 资格修饰符（using 或 Base::)。</p>
+</li>
+<li><p>模板全特化。例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MsgSender</span>&lt;CompanyZ&gt;&#123;</span>&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>将与参数无关的代码抽离 templates</p>
+<ul>
+<li><p>templates 生成多个 classes 和多个函数，所以任何 template 代码都不该与某个造成膨胀的 template 参数产生相依关系。</p>
+</li>
+<li><p>因非类型模板参数而造成的代码膨胀，往往可消除，做法是以函数参数或 class 成员变量替换 template 参数。</p>
+</li>
+<li>因类型参数而造成的代码膨胀，往往可降低，做法是让带有完全相同二进制表述的具现类型共享实现码。</li>
+</ul>
+</li>
+<li><p>运用成员函数模板接受所有兼容类型</p>
+<ul>
+<li><p>请使用 member function template 生成可接受所有兼容类型的函数。</p>
+</li>
+<li><p>如果你声明 member template 用于「泛化 copy 构造」或「泛化 assignment 操作」你还是需要声明正常的 copy 构造函数和 copy assignment 操作符。</p>
+</li>
+</ul>
+</li>
+<li><p>需要类型转换时请为模板定义非成员函数</p>
+<ul>
+<li>当我们编写一个 class template，而他所提供之 “与此 template 相关的” 函数支持 “所有参数之隐式类型转换” 时，请将那些函数定义为 “class template 内部的 friend 函数”。对比条款24 。</li>
+</ul>
+</li>
+<li><p>请使用 traits classes 表现类型信息</p>
+</li>
+<li><p>认识 template 元编程</p>
+<ul>
+<li>将工作由运行期移往编译期，得以实现早期错误检测和更高的执行效率。</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-6-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TangLingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唐凌肖">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/16/eff-6-2/" itemprop="url">继承与面向对象设计（下）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:22:27+08:00">
+                2018-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Effective C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/16/eff-6-2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-6-2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/10/16/eff-6-2/" class="leancloud_visitors" data-flag-title="继承与面向对象设计（下）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>绝不重新定义继承而来的 non-virtual 函数</p>
+</li>
+<li><p>绝不重新定义继承而来的缺省参数值</p>
+<ul>
+<li>因为缺省参数值都是静态绑定，而 virtual 函数是动态绑定</li>
+</ul>
+</li>
+<li><p>通过复合塑模出 has-a 或 “根据某物实现出”</p>
+</li>
+<li><p>明智而审慎地使用 private 继承</p>
+<ul>
+<li>private 继承意味着 “根据某物实现出“。当 derived class 需要访问 protected base class 的成员，或需要重新定义继承而来的 virtual 函数时，这么设计是合理的。</li>
+<li>private 继承可以造成 empty base 最优化。</li>
+<li>derived classes 可以重新定义 virtual 函数，但是不得调用它们。“重新定义” 表示某些事 “如何” 被完成，“调用” 则表示 “何时” 被完成。这是各自独立互不相干的。</li>
+</ul>
+</li>
+<li><p>明智而审慎地使用多重继承</p>
+<ul>
+<li><p>virtual 继承会增加大小、速度、初始化（及赋值）复杂度等等成本。如果 virtual base classes 不带任何数据，将是最具实用价值的情况。</p>
+</li>
+<li><p>多重继承可能导致新的歧义性，以及对 virtual 继承的需要。</p>
+</li>
+<li><p>多重继承的确有正当用途。其中一个情节涉及 “public 继承某个 Interface class” 和 “private 继承某个协助实现的 class” 的两相组合。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IPerson</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~IPerson();</span><br><span class="line">    <span class="keyword">virtual</span> <span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">name</span><span class="params">()</span><span class="keyword">const</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> <span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">birthday</span><span class="params">()</span><span class="keyword">const</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DatabaseID</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PersonInfo</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">PersonInfo</span><span class="params">(DatabaseID pid)</span></span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~PersonInfo();</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">theName</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">theBirthDate</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">valueDelimOpen</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">valueDelimClose</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CPerson</span>:</span> <span class="keyword">public</span> IPerson, <span class="keyword">private</span> PersonInfo&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    explicit CPerson(DatabaseID pid):PersonInfo(pid)&#123;&#125;</span><br><span class="line">    <span class="keyword">virtual</span> <span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">name</span><span class="params">()</span><span class="keyword">const</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> PersonInfo::theName();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">virtual</span> <span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">birthday</span><span class="params">()</span><span class="keyword">const</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> PersonInfo::theBirthDate();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">valueDelimOpen</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">valueDelimClose</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-6-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TangLingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唐凌肖">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/16/eff-6-1/" itemprop="url">继承与面向对象设计（上）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:12:44+08:00">
+                2018-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Effective C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/16/eff-6-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-6-1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/10/16/eff-6-1/" class="leancloud_visitors" data-flag-title="继承与面向对象设计（上）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>确定你的 public 继承塑模出 is-a 关系</p>
+</li>
+<li><p>区分接口继承和实现继承</p>
+<ul>
+<li><p>derived classes 内的名称会遮掩 base classes 内的名称。</p>
+</li>
+<li><p>为了让被遮掩的名称在见天日，可使用 using 声明式或转交函数（forwarding functions）。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf1</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf1</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span>:</span> <span class="keyword">public</span> Base&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf1</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Derived d;</span><br><span class="line">d.mf1();<span class="comment">//right</span></span><br><span class="line">d.mf1(x);<span class="comment">//wrong</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//----------------using-----------</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived1</span>:</span> <span class="keyword">public</span> Base&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="keyword">using</span> Base::mf1;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf1</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line">Derived1 d1;</span><br><span class="line">d1.mf1();<span class="comment">//right</span></span><br><span class="line">d1.mf1(x);<span class="comment">//right</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//假设Derived只想继承mf1（）的无参数版本。using 声明式则排不上用场，这时可以用转交函数</span></span><br><span class="line"><span class="comment">//----------------forwarding functions</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived2</span>:</span> <span class="keyword">private</span> Base&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">mf1</span><span class="params">()</span></span>&#123;</span><br><span class="line">		Base::mf1();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>区分接口继承和实现继承</p>
+<ul>
+<li><p>声明一个 pure virtual 函数的目的是为了让 derived classes 只继承函数接口。</p>
+</li>
+<li><p>声明普通的 virtual 函数是为了让 derived classes 继承接口和缺省实现。</p>
+</li>
+<li>声明 non-virtual 函数是为了令 derived classes 继承接口和强制性实现。</li>
+</ul>
+</li>
+<li><p>考虑 virtual 函数以外的其他选择</p>
+<ul>
+<li><p>使用 non-virtual-interface(NVI) 手法，那是 Template Method 设计模式的一种特殊形式。它以 public non-virtual 成员函数包裹较低访问性（private 或 protected）的 virtual 函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GameCharacter</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">healthValue</span><span class="params">()</span> <span class="keyword">const</span></span>&#123;</span><br><span class="line">		...</span><br><span class="line">		<span class="keyword">int</span> retVal = doHealthValue()</span><br><span class="line">		...</span><br><span class="line">		<span class="keyword">return</span> retVal;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">int</span> <span class="title">doHealthValue</span><span class="params">()</span><span class="keyword">const</span></span>&#123;</span><br><span class="line">		...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将 virtual 函数替换为 “函数指针成员变量” ，这是 Strategy 设计模式的一种分解表现形式。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GameCharacter</span>;</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">defaultHealthCalc</span><span class="params">(<span class="keyword">const</span> GameCharacter&amp; gc)</span></span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GameCharacter</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*HealthCalFunc)</span><span class="params">(<span class="keyword">const</span> GameCharacter&amp;)</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">explicit</span> <span class="title">GameCharacter</span><span class="params">(HealthCalcFunc hcf = defaultHealthCalc)</span></span></span><br><span class="line">        :healthFunc(hcf)&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">healthValue</span><span class="params">()</span><span class="keyword">const</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> healthFunc(*<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    HealthCalcFunc healthFunc;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EvilBadGuy</span>:</span> <span class="keyword">public</span> GameCharacter&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">loseHealthQuickly</span><span class="params">(<span class="keyword">const</span> GameCharacter&amp;)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">loseHealthSlowly</span><span class="params">(<span class="keyword">const</span> GameCharacter&amp;)</span></span>;</span><br><span class="line"><span class="function">EvilBadGuy <span class="title">ebg1</span><span class="params">(loseHealthQuickly)</span></span>;</span><br><span class="line"><span class="function">EvilBadGuy <span class="title">ebg2</span><span class="params">(loseHealthSlowly)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>以 std::function 成员变量替换 virtual 函数，因而允许使用任何可调用物（callable entity）搭配一个兼容于需求的签名式。这也是 Strategy 设计模式的某种形式。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GameCharacter</span>;</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">defaultHealthCalc</span><span class="params">(<span class="keyword">const</span> GameCharacter&amp; gc)</span></span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GameCharacter</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="comment">//和上边只有这一处不同//</span></span><br><span class="line">    <span class="keyword">typedef</span> <span class="built_in">std</span>::function&lt;<span class="keyword">int</span> （<span class="keyword">const</span> GameCharacter&amp;）&gt; HealthCalcFunc;</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">GameCharacter</span><span class="params">(HealthCalcFunc hcf = defaultHealthCalc)</span></span></span><br><span class="line">        :healthFunc(hcf)&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">healthValue</span><span class="params">()</span><span class="keyword">const</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> healthFunc(*<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	HealthCalcFunc healthFunc;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EvilBadGuy</span>:</span> <span class="keyword">public</span> GameCharacter&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">short</span> <span class="title">calcHealth</span><span class="params">(<span class="keyword">const</span> GameCharacter&amp;)</span></span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">HealthCalculator</span>&#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">const</span> GameCharacter&amp;)</span><span class="keyword">const</span></span>&#123;...&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GameLevel</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">float</span> <span class="title">health</span><span class="params">(<span class="keyword">const</span> GameCharacter&amp;)</span><span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">EvilBadGuy <span class="title">ebg1</span><span class="params">(calcHealth)</span></span>;</span><br><span class="line">EvilBadGuy ebg2(HealthCalculator());</span><br><span class="line"></span><br><span class="line">GameLevel currentlevel;</span><br><span class="line"><span class="comment">//注意成员函数有个this指针</span></span><br><span class="line">EvilBadGuy ebg3(std::bind(&amp;GameLevel::health, currentlevel, _1));</span><br><span class="line"><span class="function">EvilBadGuy <span class="title">ebg4</span><span class="params">(</span></span></span><br><span class="line">    [&amp;](GameCharacter&amp;)-&gt;int</span><br><span class="line">	&#123;</span><br><span class="line">		...</span><br><span class="line">	&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>传统的 Strategy设计模式实现，将继承体系内的 virtual 函数替换为另一个继承体系内的 virtual 函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GameCharacter</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HealthCalcFunc</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">int</span> <span class="title">calc</span><span class="params">(<span class="keyword">const</span> GameCharacter&amp; )</span><span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line">HealthCalcFunc defaultHealthCalc;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GameCharacter</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">GameCharacter</span><span class="params">(HealCalcFunc* phcf = &amp;defaultHealthCalc)</span></span></span><br><span class="line">        :pHealthCalc(phcf)&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">healthValue</span><span class="params">()</span><span class="keyword">const</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> pHealthCalc-&gt;calc(*<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    HealthCalcFunc* pHealthCalc;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TangLingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唐凌肖">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/16/eff-5/" itemprop="url">实现</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:08:05+08:00">
+                2018-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Effective C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/16/eff-5/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-5/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/10/16/eff-5/" class="leancloud_visitors" data-flag-title="实现">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>尽可能延后变量定义式的出现时间</p>
+<ul>
+<li>这样做可增加程序的清晰度并改善程序效率</li>
+</ul>
+</li>
+<li><p>尽量少做转型动作</p>
+<ul>
+<li><p>尽量避免转型,特别是dynamic_cast</p>
+</li>
+<li><p>宁可使用C++-style转型,不要使用旧式转型</p>
+</li>
+</ul>
+</li>
+<li><p>避免返回handle(包括reference,指针,迭代器)指向对象内部.</p>
+<ul>
+<li>帮助const成员函数的行为像个const,并将发生”虚吊号码牌”(dangling handles)的可能性降至最低.</li>
+</ul>
+</li>
+<li><p>为异常安全而努力是值得的</p>
+<ul>
+<li><p>异常安全函数即使发生异常也不会泄漏资源或允许任何数据结构败坏。这样的函数区分为三种可能的保证：基本型、强烈型、不抛异常型。</p>
+</li>
+<li><p>「强烈保证」往往能够以 copy-and-swap 实现出来，但”强烈保证“并非对所有函数都可实现或具备现实意义。</p>
+</li>
+<li>函数提供的“异常安全保证”通常最高只等于其所调用的各个函数的“异常安全保证”中的最弱者。</li>
+</ul>
+</li>
+<li><p>透彻了解 inlining 的里里外外</p>
+<ul>
+<li><p>将大多数 inling 限制在小型、被频发调用的函数身上。</p>
+</li>
+<li><p>不要因为 function templates 出现在头文件，就将它们声明为 inline。</p>
+</li>
+</ul>
+</li>
+<li><p>将文件间的编译依存关系降至最低</p>
+<ul>
+<li><p>“声明的依存性” 替换 “定义的依存性”，这正是编译依存性最小化的本质：现实中让头文件尽可能自我满足，万一做不到，则让它与其他文件内的声明式（而非定义式）相依。例如下例：Person 只内含一个指针成员，指向其实现类 PersonImpl。这般设计被称为 pimpl idiom。这样的设计下，Person 的客户完全与 Dates，Addresses 以及 Persons 的实现细目分离了。那些 classes 的任何实现修改都不需要 Person 客户端重新编译。真正实现了“接口与实现分离”。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PersonImpl</span>;</span> <span class="comment">//Person实现类的前置声明</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span>;</span> <span class="comment">//Person接口用到的classes的前置声明</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Address</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Person(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; name, <span class="keyword">const</span> Data&amp; birthday, <span class="keyword">const</span> Address&amp; addr);</span><br><span class="line">	<span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">name</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">birthDate</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">address</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;PersonImpl&gt; pImpl;<span class="comment">//指向实现的指针</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果使用 object reference 或 object pointers 可以完成任务，就不要使用 objects。</p>
+</li>
+<li><p>尽量以 class 声明式替换 class 定义式。</p>
+</li>
+<li><p>为声明式和定义式提供不同的头文件。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Person.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"PersonImpl.h"</span></span></span><br><span class="line">Person::Person(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; name, <span class="keyword">const</span> Data&amp; birthday, <span class="keyword">const</span> Address&amp; addr): pImpl(<span class="keyword">new</span> PersonImpl(name, birthday, addr))&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">string</span> Person::name()<span class="keyword">const</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> pImpl-&gt;name();</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>像 Person 这样使用 pimpl idiom 的 class 被称为 Handle classes。它将所有函数转交给相应的实现类完成。</p>
+</li>
+<li><p>另一种实现 Handle classes 的方法是 Interface class（虚基类）。通过工厂函数返回指针。</p>
+</li>
+<li><p>支持 “编译依存性最小化” 的一般构想是：相依于声明式，不要想依与定义式。两个手段是：Handle classes 和 Interface classes。</p>
+</li>
+<li><p>程序库头文件应该以“完全且仅有声明式”的形式存在，无论是否涉及templates。</p>
+</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TangLingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唐凌肖">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/16/eff-4/" itemprop="url">设计与声明</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:07:24+08:00">
+                2018-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Effective C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/16/eff-4/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-4/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/10/16/eff-4/" class="leancloud_visitors" data-flag-title="设计与声明">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>让接口容易被正确使用,不易被误用</p>
+</li>
+<li><p>设计class犹如设计type</p>
+</li>
+<li><p>宁以pass-by-reference-to-const 替换 pass-by-value</p>
+<ul>
+<li><p>前者通常比较高效,并可避免切割问题</p>
+</li>
+<li><p>以上规则并不适用于内置类型,以及STL迭代器和函数对象</p>
+</li>
+</ul>
+</li>
+<li><p>必须返回对象时,别妄想返回其reference</p>
+<ul>
+<li>绝不要返回pointer或reference指向一个local stack对象,或返回reference指向一个heap-allocated对象,或返回pointer或reference指向一个local static对象而有可能同时需要多个这样的对象</li>
+</ul>
+</li>
+<li><p>将成员变量声明为private</p>
+<ul>
+<li><p>这可赋予客户访问数据的一致性,可细微划分访问控制,允诺约束条件获得保证,并提供class作者以充分的实现弹性</p>
+</li>
+<li><p>protected并不比public更具封装性</p>
+</li>
+</ul>
+</li>
+<li><p>宁以non-member non-friend替换member函数</p>
+</li>
+<li><p>若所有参数皆需类型转换,请为此采用non-member函数</p>
+</li>
+<li><p>考虑写出一个不抛异常的swap函数</p>
+<ul>
+<li>调用swap时应针对std::swap使用using声明式,然后调用swap并且不带任何命名空间修饰</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TangLingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唐凌肖">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/16/eff-3/" itemprop="url">资源管理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:06:01+08:00">
+                2018-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Effective C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/16/eff-3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-3/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/10/16/eff-3/" class="leancloud_visitors" data-flag-title="资源管理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>以对象管理资源(资源取得时机便是初始化时机RAII)</p>
+<ul>
+<li>为防止资源泄漏,请使用RAII对象,它们在构造函数中获得资源并在析构函数中释放资源.常用的RAII classes是tr1::shared_ptr和std::auto_ptr</li>
+</ul>
+</li>
+<li><p>在资源管理类中小心copying行为</p>
+<ul>
+<li><p>复制RAII对象必须一并复制它所管理的资源,所以资源的copying行为决定RAII对象的copying行为</p>
+</li>
+<li><p>普遍而常见的RAII class copying行为是:抑制copying(noncopy),施行引用计数法(shared_ptr)</p>
+</li>
+</ul>
+</li>
+<li><p>在资源管理类中提供对原始资源的访问</p>
+</li>
+<li><p>成对使用new和delete时要采取相同形式</p>
+<ul>
+<li>如果在new中使用[],必须在相应的delete也是用[]</li>
+</ul>
+</li>
+<li><p>以独立语句将newed对象置入智能指针</p>
+<ul>
+<li>如果不这样做,一旦异常被抛出,有可能导致难以察觉的资源泄漏</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TangLingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唐凌肖">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/16/eff-2/" itemprop="url">构造、析构、赋值运算</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:04:51+08:00">
+                2018-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Effective C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/16/eff-2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/10/16/eff-2/" class="leancloud_visitors" data-flag-title="构造、析构、赋值运算">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>了解C++默默编写并调用那些函数</p>
+</li>
+<li><p>若不想使用编译器自动生成的函数,就该明确拒绝</p>
+<ul>
+<li>为驳回编译器自动提供的机能,可将相应的成员函数声明为private并且不予实现.如noncopy</li>
+</ul>
+</li>
+<li><p>为多态基类声明virtual析构函数</p>
+<ul>
+<li><p>polymorphic base classes应该声明一个virtual析构函数.如果class带有任何virtual函数,他就应该拥有一个virtual析构函数</p>
+</li>
+<li><p>classes的设计目的如果不是作为base classes使用,或不是为了具备多态性(polymorphically),就不该声明virtual析构函数</p>
+</li>
+</ul>
+</li>
+<li><p>别让异常逃离析构函数</p>
+<ul>
+<li><p>析构函数绝对不要吐出异常.如果一个被析构函数调用的函数可能抛出异常,析构函数应该捕捉任何异常,然后吞下它们或结束程序</p>
+</li>
+<li><p>如果客户需要对某个操作函数运行期间抛出的异常做出反应,那么class应该提供一个普通函数执行该操作</p>
+</li>
+</ul>
+</li>
+<li><p>绝不在构造和析构过程中调用virtual函数</p>
+<ul>
+<li>因为这类调用从不下降至derived class</li>
+</ul>
+</li>
+<li><p>令operator= 返回一个reference to* this</p>
+</li>
+<li><p>在operator=中处理”自我赋值”</p>
+<ul>
+<li>其中技术包括比较”来源对象”和”目标对象”的地址,精心周到的语句顺序,以及copy-and-swap</li>
+</ul>
+</li>
+<li><p>复制对象时勿忘其每一个成分</p>
+<ul>
+<li><p>copying函数应该确保复制”对象内的所有成员变量”及”所有base class成分”</p>
+</li>
+<li><p>不要尝试以某个copying函数实现另一个copying函数,应该将共同机能放进第三个函数中,并由两个copying函数共同调用</p>
+</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TangLingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唐凌肖">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/16/eff-1/" itemprop="url">让自己习惯 C++</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:03:22+08:00">
+                2018-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Effective C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/16/eff-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/10/16/eff-1/" class="leancloud_visitors" data-flag-title="让自己习惯 C++">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li>视C++为一个语言联邦</li>
+<li>尽量以const,enum,inline替换#define</li>
+<li>尽可能使用const</li>
+<li>确定对象被使用前以先被初始化</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/13/array/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -639,7 +2240,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -650,7 +2251,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
