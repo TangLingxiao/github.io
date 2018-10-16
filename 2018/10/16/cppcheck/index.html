@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="尽可能延后变量定义式的出现时间  这样做可增加程序的清晰度并改善程序效率   尽量少做转型动作  尽量避免转型,特别是dynamic_cast  宁可使用C++-style转型,不要使用旧式转型    避免返回handle(包括reference,指针,迭代器)指向对象内部.  帮助const成员函数的行为像个const,并将发生”虚吊号码牌”(dangling handles)的可能性降至最低">
+<meta name="description" content="Cppcheckfirst test cppcheck file1.c //默认是 error 选项  check all files in a folder cppcheck path  exclude a file or folder from checking 第一种：cppcheck -isrc/b -isrc/c // -i 代表 ignore 第二种：只 include 需要的目录">
 <meta property="og:type" content="article">
-<meta property="og:title" content="实现">
-<meta property="og:url" content="http://yoursite.com/2018/10/16/eff-5/index.html">
+<meta property="og:title" content="cppcheck manual">
+<meta property="og:url" content="http://yoursite.com/2018/10/16/cppcheck/index.html">
 <meta property="og:site_name" content="唐凌肖">
-<meta property="og:description" content="尽可能延后变量定义式的出现时间  这样做可增加程序的清晰度并改善程序效率   尽量少做转型动作  尽量避免转型,特别是dynamic_cast  宁可使用C++-style转型,不要使用旧式转型    避免返回handle(包括reference,指针,迭代器)指向对象内部.  帮助const成员函数的行为像个const,并将发生”虚吊号码牌”(dangling handles)的可能性降至最低">
+<meta property="og:description" content="Cppcheckfirst test cppcheck file1.c //默认是 error 选项  check all files in a folder cppcheck path  exclude a file or folder from checking 第一种：cppcheck -isrc/b -isrc/c // -i 代表 ignore 第二种：只 include 需要的目录">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-16T15:36:58.704Z">
+<meta property="og:updated_time" content="2018-10-16T15:53:55.849Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="实现">
-<meta name="twitter:description" content="尽可能延后变量定义式的出现时间  这样做可增加程序的清晰度并改善程序效率   尽量少做转型动作  尽量避免转型,特别是dynamic_cast  宁可使用C++-style转型,不要使用旧式转型    避免返回handle(包括reference,指针,迭代器)指向对象内部.  帮助const成员函数的行为像个const,并将发生”虚吊号码牌”(dangling handles)的可能性降至最低">
+<meta name="twitter:title" content="cppcheck manual">
+<meta name="twitter:description" content="Cppcheckfirst test cppcheck file1.c //默认是 error 选项  check all files in a folder cppcheck path  exclude a file or folder from checking 第一种：cppcheck -isrc/b -isrc/c // -i 代表 ignore 第二种：只 include 需要的目录">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/16/eff-5/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/16/cppcheck/"/>
 
 
 
 
 
-  <title>实现 | 唐凌肖</title>
+  <title>cppcheck manual | 唐凌肖</title>
   
 
 
@@ -252,7 +252,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-5/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/cppcheck/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TangLingxiao">
@@ -269,7 +269,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">实现</h1>
+          <h1 class="post-title" itemprop="name headline">cppcheck manual</h1>
         
 
         <div class="post-meta">
@@ -281,7 +281,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:08:05+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:49:32+08:00">
                 2018-10-16
               </time>
             
@@ -304,8 +304,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
-                    <span itemprop="name">Effective C++</span>
+                  <a href="/categories/cppcheck/" itemprop="url" rel="index">
+                    <span itemprop="name">cppcheck</span>
                   </a>
                 </span>
 
@@ -322,8 +322,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/10/16/eff-5/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-5/" itemprop="commentCount"></span>
+                <a href="/2018/10/16/cppcheck/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/cppcheck/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -331,7 +331,7 @@
 
           
           
-             <span id="/2018/10/16/eff-5/" class="leancloud_visitors" data-flag-title="实现">
+             <span id="/2018/10/16/cppcheck/" class="leancloud_visitors" data-flag-title="cppcheck manual">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -362,64 +362,44 @@
       
 
       
-        <ol>
-<li><p>尽可能延后变量定义式的出现时间</p>
-<ul>
-<li>这样做可增加程序的清晰度并改善程序效率</li>
+        <h4 id="Cppcheck"><a href="#Cppcheck" class="headerlink" title="Cppcheck"></a>Cppcheck</h4><h5 id="first-test"><a href="#first-test" class="headerlink" title="first test"></a>first test</h5><ul>
+<li>cppcheck file1.c //默认是 error 选项</li>
 </ul>
-</li>
-<li><p>尽量少做转型动作</p>
-<ul>
-<li><p>尽量避免转型,特别是dynamic_cast</p>
-</li>
-<li><p>宁可使用C++-style转型,不要使用旧式转型</p>
-</li>
+<h5 id="check-all-files-in-a-folder"><a href="#check-all-files-in-a-folder" class="headerlink" title="check all files in a folder"></a>check all files in a folder</h5><ul>
+<li>cppcheck path</li>
 </ul>
-</li>
-<li><p>避免返回handle(包括reference,指针,迭代器)指向对象内部.</p>
-<ul>
-<li>帮助const成员函数的行为像个const,并将发生”虚吊号码牌”(dangling handles)的可能性降至最低.</li>
+<h5 id="exclude-a-file-or-folder-from-checking"><a href="#exclude-a-file-or-folder-from-checking" class="headerlink" title="exclude a file or folder from checking"></a>exclude a file or folder from checking</h5><ul>
+<li>第一种：cppcheck -isrc/b -isrc/c // -i 代表 ignore</li>
+<li>第二种：只 include 需要的目录</li>
 </ul>
-</li>
-<li><p>为异常安全而努力是值得的</p>
-<ul>
-<li><p>异常安全函数即使发生异常也不会泄漏资源或允许任何数据结构败坏。这样的函数区分为三种可能的保证：基本型、强烈型、不抛异常型。</p>
-</li>
-<li><p>「强烈保证」往往能够以 copy-and-swap 实现出来，但”强烈保证“并非对所有函数都可实现或具备现实意义。</p>
-</li>
-<li>函数提供的“异常安全保证”通常最高只等于其所调用的各个函数的“异常安全保证”中的最弱者。</li>
+<h5 id="severities"><a href="#severities" class="headerlink" title="severities"></a>severities</h5><ul>
+<li>error，warning，style，performance，portability，information</li>
 </ul>
-</li>
-<li><p>透彻了解 inlining 的里里外外</p>
-<ul>
-<li><p>将大多数 inling 限制在小型、被频发调用的函数身上。</p>
-</li>
-<li><p>不要因为 function templates 出现在头文件，就将它们声明为 inline。</p>
+<h5 id="enable-messages"><a href="#enable-messages" class="headerlink" title="enable messages"></a>enable messages</h5><ul>
+<li>cppcheck –enable=performance,warning file.c //=两边没空格</li>
+</ul>
+<h5 id="save-results-in-file"><a href="#save-results-in-file" class="headerlink" title="save results in file"></a>save results in file</h5><ul>
+<li>cppcheck file.c 2&gt; err.txt  // <strong>2&gt;</strong></li>
+</ul>
+<h5 id="multithread-check"><a href="#multithread-check" class="headerlink" title="multithread check"></a>multithread check</h5><ul>
+<li>cppcheck -j 4 path            // -j是多线程开关，4是线程数</li>
+</ul>
+<h5 id="cmake"><a href="#cmake" class="headerlink" title="cmake"></a>cmake</h5><ul>
+<li><p>example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON</span><br><span class="line"><span class="comment">#the file compile_commands.json is created in the current folder.</span></span><br><span class="line"><span class="comment">#then run cppcheck like this:</span></span><br><span class="line">$ cppcheck --project=compile_commands.json</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-</li>
-<li><p>将文件间的编译依存关系降至最低</p>
-<ul>
-<li><p>“声明的依存性” 替换 “定义的依存性”，这正是编译依存性最小化的本质：现实中让头文件尽可能自我满足，万一做不到，则让它与其他文件内的声明式（而非定义式）相依。例如下例：Person 只内含一个指针成员，指向其实现类 PersonImpl。这般设计被称为 pimpl idiom。这样的设计下，Person 的客户完全与 Dates，Addresses 以及 Persons 的实现细目分离了。那些 classes 的任何实现修改都不需要 Person 客户端重新编译。真正实现了“接口与实现分离”。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PersonImpl</span>;</span> <span class="comment">//Person实现类的前置声明</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span>;</span> <span class="comment">//Person接口用到的classes的前置声明</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Address</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Person(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; name, <span class="keyword">const</span> Data&amp; birthday, <span class="keyword">const</span> Address&amp; addr);</span><br><span class="line">	<span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">name</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">birthDate</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">address</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;PersonImpl&gt; pImpl;<span class="comment">//指向实现的指针</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>如果使用 object reference 或 object pointers 可以完成任务，就不要使用 objects。</p>
-</li>
-<li><p>尽量以 class 声明式替换 class 定义式。</p>
-</li>
-<li><p>为声明式和定义式提供不同的头文件。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Person.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"PersonImpl.h"</span></span></span><br><span class="line">Person::Person(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; name, <span class="keyword">const</span> Data&amp; birthday, <span class="keyword">const</span> Address&amp; addr): pImpl(<span class="keyword">new</span> PersonImpl(name, birthday, addr))&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">string</span> Person::name()<span class="keyword">const</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> pImpl-&gt;name();</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>像 Person 这样使用 pimpl idiom 的 class 被称为 Handle classes。它将所有函数转交给相应的实现类完成。</p>
-</li>
-<li><p>另一种实现 Handle classes 的方法是 Interface class（虚基类）。通过工厂函数返回指针。</p>
-</li>
-<li><p>支持 “编译依存性最小化” 的一般构想是：相依于声明式，不要想依与定义式。两个手段是：Handle classes 和 Interface classes。</p>
-</li>
-<li><p>程序库头文件应该以“完全且仅有声明式”的形式存在，无论是否涉及templates。</p>
+<h5 id="visual-studio"><a href="#visual-studio" class="headerlink" title="visual studio"></a>visual studio</h5><ul>
+<li><p>you can run cppcheck on individual project files(<em>.vcxproj) or on a whole solution( </em>.sln)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#run cppcheck on a whole solution</span></span><br><span class="line">$ cppcheck --project=foobar.sln</span><br><span class="line"><span class="comment">#run cppcheck on a individual project</span></span><br><span class="line">$ cppcheck --project=foobar.vcxproj</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-</li>
-</ol>
+<h5 id="XML-output"><a href="#XML-output" class="headerlink" title="XML output"></a>XML output</h5><ul>
+<li>cppcheck can generate output in XML format. Use –xml to enable this format.</li>
+</ul>
+<h5 id="example"><a href="#example" class="headerlink" title="example"></a>example</h5><ul>
+<li>cppcheck -j 4 –enable=warning,performance –inconclusive –xml –xml-version=2 –project=<em>path</em>\servers.sln 2&gt; <em>path</em>\cppcheck.xml</li>
+</ul>
 
       
     </div>
@@ -444,8 +424,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/16/eff-4/" rel="next" title="设计与声明">
-                <i class="fa fa-chevron-left"></i> 设计与声明
+              <a href="/2018/10/16/eff-7/" rel="next" title="模板与泛型编程">
+                <i class="fa fa-chevron-left"></i> 模板与泛型编程
               </a>
             
           </div>
@@ -453,10 +433,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/16/eff-6-1/" rel="prev" title="继承与面向对象设计（上）">
-                继承与面向对象设计（上） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -511,8 +487,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -588,6 +573,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cppcheck"><span class="nav-number">1.</span> <span class="nav-text">Cppcheck</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#first-test"><span class="nav-number">1.1.</span> <span class="nav-text">first test</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#check-all-files-in-a-folder"><span class="nav-number">1.2.</span> <span class="nav-text">check all files in a folder</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#exclude-a-file-or-folder-from-checking"><span class="nav-number">1.3.</span> <span class="nav-text">exclude a file or folder from checking</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#severities"><span class="nav-number">1.4.</span> <span class="nav-text">severities</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#enable-messages"><span class="nav-number">1.5.</span> <span class="nav-text">enable messages</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#save-results-in-file"><span class="nav-number">1.6.</span> <span class="nav-text">save results in file</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#multithread-check"><span class="nav-number">1.7.</span> <span class="nav-text">multithread check</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#cmake"><span class="nav-number">1.8.</span> <span class="nav-text">cmake</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#visual-studio"><span class="nav-number">1.9.</span> <span class="nav-text">visual studio</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#XML-output"><span class="nav-number">1.10.</span> <span class="nav-text">XML output</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#example"><span class="nav-number">1.11.</span> <span class="nav-text">example</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
