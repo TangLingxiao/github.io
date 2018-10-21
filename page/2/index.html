@@ -252,6 +252,213 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TangLingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唐凌肖">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/16/eff-2/" itemprop="url">构造、析构、赋值运算</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:04:51+08:00">
+                2018-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Effective C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/16/eff-2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/10/16/eff-2/" class="leancloud_visitors" data-flag-title="构造、析构、赋值运算">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>了解C++默默编写并调用那些函数</p>
+</li>
+<li><p>若不想使用编译器自动生成的函数,就该明确拒绝</p>
+<ul>
+<li>为驳回编译器自动提供的机能,可将相应的成员函数声明为private并且不予实现.如noncopy</li>
+</ul>
+</li>
+<li><p>为多态基类声明virtual析构函数</p>
+<ul>
+<li><p>polymorphic base classes应该声明一个virtual析构函数.如果class带有任何virtual函数,他就应该拥有一个virtual析构函数</p>
+</li>
+<li><p>classes的设计目的如果不是作为base classes使用,或不是为了具备多态性(polymorphically),就不该声明virtual析构函数</p>
+</li>
+</ul>
+</li>
+<li><p>别让异常逃离析构函数</p>
+<ul>
+<li><p>析构函数绝对不要吐出异常.如果一个被析构函数调用的函数可能抛出异常,析构函数应该捕捉任何异常,然后吞下它们或结束程序</p>
+</li>
+<li><p>如果客户需要对某个操作函数运行期间抛出的异常做出反应,那么class应该提供一个普通函数执行该操作</p>
+</li>
+</ul>
+</li>
+<li><p>绝不在构造和析构过程中调用virtual函数</p>
+<ul>
+<li>因为这类调用从不下降至derived class</li>
+</ul>
+</li>
+<li><p>令operator= 返回一个reference to* this</p>
+</li>
+<li><p>在operator=中处理”自我赋值”</p>
+<ul>
+<li>其中技术包括比较”来源对象”和”目标对象”的地址,精心周到的语句顺序,以及copy-and-swap</li>
+</ul>
+</li>
+<li><p>复制对象时勿忘其每一个成分</p>
+<ul>
+<li><p>copying函数应该确保复制”对象内的所有成员变量”及”所有base class成分”</p>
+</li>
+<li><p>不要尝试以某个copying函数实现另一个copying函数,应该将共同机能放进第三个函数中,并由两个copying函数共同调用</p>
+</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -811,7 +1018,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
