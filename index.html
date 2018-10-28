@@ -252,6 +252,211 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/28/more-eff-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TangLingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唐凌肖">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/28/more-eff-3/" itemprop="url">异常处理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-28T16:04:36+08:00">
+                2018-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/More-Effective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">More Effective C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/28/more-eff-3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/28/more-eff-3/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/10/28/more-eff-3/" class="leancloud_visitors" data-flag-title="异常处理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li>利用 destructors 避免泄漏资源<ul>
+<li>把资源封装在对象内，通常便可以在 exceptions 出现时避免泄漏资源。</li>
+</ul>
+</li>
+<li>在 constructors 内阻止资源泄漏<ul>
+<li>如果 constructors 中抛出异常，则对象没有完全构造好，C++ 拒绝为其调用 destructor。</li>
+<li>通常只需将所有可能的 exceptions 捕捉起来，执行某种清理工作，然后重新抛出 exception，使它继续传播出去。</li>
+<li>使用智能指针代替 pointer class members 也可免除 constructor 内因 exceptions 的出现而发生的资源泄漏。</li>
+</ul>
+</li>
+<li>禁止异常流出 destructors 之外<ul>
+<li>它可以避免 terminate 函数在 exception 传播过程中的栈展开机制中被调用。</li>
+<li>他可以协助确保 destructors 完成其应该完成的所有事情。</li>
+</ul>
+</li>
+<li>了解 “抛出一个 exception” 与 “传递一个参数” 或 “调用一个虚函数” 之间的差异<ul>
+<li>一个对象被抛出作为 exception 时，总是会发生复制。因为对象可能离开了命名空间调用了 destructor。</li>
+<li>一般而言，必须使用 throw; 语句才能重新抛出当前的 exception，它不会改变被传播的 exception 的类型。此外，它也比较有效率，因为不需要产生新的 exception object。</li>
+<li>“抛出一个 exception” 与 “传递一个参数” 相比，前者会多构造一个 “被抛出物” 的副本。</li>
+<li>千万不要抛出一个指向局部对象的指针，因为该局部对象会在 exception 离开其 scope 时被销毁。</li>
+<li>exception 与 catch 字句相匹配过程中，仅有两种转换可以发生。一种是继承架构中的类转换，一个针对  base class exception 而编写的 catch 字句，可以处理类型为 derived class 的 exceptions。第二个允许的转换是从一个 “有型指针” 转为 “无型指针”，例如对 const void* 指针设计的 catch 字句，可捕捉所有指针类型的 exception。</li>
+<li>与调用虚函数不同，虚函数采用 best fit 策略，而 exception 处理遵循 first fit 策略。catch 子句总是依出现的顺序做匹配，因此针对 derived class 设计的 catch 子句如果出现在 base class 的 catch 子句之后，则不会被调用。</li>
+</ul>
+</li>
+<li>以 by reference 方式捕捉 exceptions<ul>
+<li>catch by pointer 会面临捕捉的指针指向不存在对象的问题。</li>
+<li>catch by value 则会面临复制两次的问题，一次是必定会产生的 exception object，一次是传递对象的拷贝。另一个问题是引起切割问题，derived class 被视为 base class，丧失其派生成分。</li>
+<li>catch by reference 可以避免对象删除问题，也可以避开切割问题，也约束了 exception object 需被复制的次数。</li>
+</ul>
+</li>
+<li>明智运用 exception specifications<ul>
+<li>它们对希望函数抛出怎样的 exception 提供了说明，但在违反 exception specification 时会导致调用默认的unexpected，默认的 unexpected 会调用 terminate 进而调用 abort 导致程序停止。</li>
+<li>它们很容易被违反，可能会妨碍更上层的 exception 处理函数。</li>
+</ul>
+</li>
+<li>了解异常处理的成本<ul>
+<li>为了能够在运行期处理 exceptions，需要成本，即使你从未使用关键词 try，throw 或 catch。</li>
+<li>空间成本，放置某些数据结构，记录哪些对象已被完全构造妥当。</li>
+<li>时间成本，随时保持那些数据结构的正确性。</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/21/more-eff-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2058,195 +2263,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="TangLingxiao">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唐凌肖">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/16/eff-3/" itemprop="url">资源管理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:06:01+08:00">
-                2018-10-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
-                    <span itemprop="name">Effective C++</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/16/eff-3/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-3/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2018/10/16/eff-3/" class="leancloud_visitors" data-flag-title="资源管理">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li><p>以对象管理资源(资源取得时机便是初始化时机RAII)</p>
-<ul>
-<li>为防止资源泄漏,请使用RAII对象,它们在构造函数中获得资源并在析构函数中释放资源.常用的RAII classes是tr1::shared_ptr和std::auto_ptr</li>
-</ul>
-</li>
-<li><p>在资源管理类中小心copying行为</p>
-<ul>
-<li><p>复制RAII对象必须一并复制它所管理的资源,所以资源的copying行为决定RAII对象的copying行为</p>
-</li>
-<li><p>普遍而常见的RAII class copying行为是:抑制copying(noncopy),施行引用计数法(shared_ptr)</p>
-</li>
-</ul>
-</li>
-<li><p>在资源管理类中提供对原始资源的访问</p>
-</li>
-<li><p>成对使用new和delete时要采取相同形式</p>
-<ul>
-<li>如果在new中使用[],必须在相应的delete也是用[]</li>
-</ul>
-</li>
-<li><p>以独立语句将newed对象置入智能指针</p>
-<ul>
-<li>如果不这样做,一旦异常被抛出,有可能导致难以察觉的资源泄漏</li>
-</ul>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2297,7 +2313,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
