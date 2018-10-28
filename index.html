@@ -252,6 +252,220 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/28/more-eff-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TangLingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="唐凌肖">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/28/more-eff-4/" itemprop="url">效率</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-28T17:15:05+08:00">
+                2018-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/More-Effective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">More Effective C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/28/more-eff-4/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/28/more-eff-4/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/10/28/more-eff-4/" class="leancloud_visitors" data-flag-title="效率">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li>谨记 80-20 法则<ul>
+<li>一个程序 80% 的资源用于 20% 的代码身上。</li>
+<li>找出瓶颈的可行之道是完全根据观察或实验来识别出那 20% 代码，而辨别之道就是借助某个程序分析器。</li>
+</ul>
+</li>
+<li><p>考虑使用 lazy evaluation</p>
+<ul>
+<li>引用计数，避免非必要的对象复制</li>
+<li>区分读和写，区别 operator [] 的读取和写操作</li>
+<li>缓式取出，避免非必要的数据库读取动作</li>
+<li>表达式缓评估，避免非必要的数值计算动作</li>
+</ul>
+</li>
+<li><p>分期摊还预期的计算成本</p>
+<ul>
+<li>caching技术，将常用的数据缓存下来</li>
+<li>prefetching技术，比如容器的扩容</li>
+<li>本条款体现空间可以交换时间</li>
+</ul>
+</li>
+<li><p>了解临时对象的来源</p>
+<ul>
+<li>C++ 真正的所谓临时对象是不可见的——不会在你的源代码中出现。只要你产生一个 non-heap object 而没有为它命名，变产生一个临时对象。</li>
+<li>此等匿名对象通常发生于两种情况：一是当隐式类型转换被施行起来以求函数调用能够成功；二是但函数返回对象的时候。</li>
+<li>只有当对象以 by value 方式传递，或是当对象被传递给一个 reference-to-const 参数时，这些转换才会发生。如果对象被传递给一个 reference-to-non-const 参数，并不会发生此类转换。原因是发生隐式类型转换时会产生临时对象，对引用的修改实际是修改的临时对象，而不是修改的引用，与传引用参数的目的不符。</li>
+<li>任何时候只要看到一个 reference-to-const 参数，就极可能会有一个临时对象被产生出来绑定至该参数上。任何时候只要看到函数返回一个对象，就会产生临时对象。</li>
+</ul>
+</li>
+<li><p>协助完成 “返回值优化（RVO）”</p>
+<ul>
+<li><p>如果函数一定得以 by-value 返回对象，你绝对无法消除之。你需要做的是努力降低被返回对象的成本。</p>
+</li>
+<li><p>返回所谓的 constructor arguments 以取代对象。这笔买卖似乎不见得多划算，因为还是必须为 “函数内的临时对象” 的构造和析构付出代价，还是必须为 “函数返回对象” 的构造和析构付出代价。但是 C++ 允许编译器将临时对象优化，使它们不存在，将 return 表达式所定义的对象构造于内存内。这样临时对象的总成本为 0 。可以将此函数声明为 inline。例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  Rational(<span class="keyword">int</span> numerator = <span class="number">0</span>, <span class="keyword">int</span> denominator = <span class="number">1</span>);</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">numerator</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">denominator</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">    </span><br><span class="line">  <span class="comment">//返回对象最有效率的做法</span></span><br><span class="line">  <span class="keyword">inline</span> <span class="keyword">const</span> Rational <span class="keyword">operator</span>*(<span class="keyword">const</span> Rational&amp; lhs, <span class="keyword">const</span> Rational&amp; rhs)&#123;</span><br><span class="line">  	<span class="keyword">return</span> Rational(lhs.numerator() * rhs.numerator(), lhs.denominator() * 		       rhs.denominator());      </span><br><span class="line">  &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">int</span> numerator;</span><br><span class="line">  <span class="keyword">int</span> denominator;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Rational a = <span class="number">10</span>;</span><br><span class="line"><span class="function">Rational <span class="title">b</span><span class="params">(<span class="number">1</span>,<span class="number">2</span>)</span></span>;</span><br><span class="line">Rational c = a * b;<span class="comment">//编译器的返回值优化</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>利用重载技术避免隐式类型转换</p>
+</li>
+<li><p>考虑以操作符复合形式 （op=）取代其独身形式 （op）</p>
+<ul>
+<li><p>可以以前者为基础实现后者。例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">const</span> <span class="title">T</span> <span class="title">operator</span> +（<span class="title">const</span> <span class="title">T</span>&amp; <span class="title">lhs</span>, <span class="title">const</span> <span class="title">T</span>&amp; <span class="title">rhs</span>)&#123;</span></span><br><span class="line">    <span class="keyword">return</span> T(lhs) += rhs;<span class="comment">//返回值优化</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>一般而言，复合操作符比起独身版本效率高，因为独身版本通常必须返回一个新对象，因此必须负担一个临时对象的构造和析构成本。至于复合版本则是直接将结果写入其左端自变量，不需要产生一个临时对象。</p>
+</li>
+<li><p>允许客户在效率和便利性之间取舍。</p>
+</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/28/more-eff-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2065,204 +2279,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/eff-4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="TangLingxiao">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="唐凌肖">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/16/eff-4/" itemprop="url">设计与声明</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T23:07:24+08:00">
-                2018-10-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Effective-C/" itemprop="url" rel="index">
-                    <span itemprop="name">Effective C++</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/16/eff-4/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/16/eff-4/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2018/10/16/eff-4/" class="leancloud_visitors" data-flag-title="设计与声明">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li><p>让接口容易被正确使用,不易被误用</p>
-</li>
-<li><p>设计class犹如设计type</p>
-</li>
-<li><p>宁以pass-by-reference-to-const 替换 pass-by-value</p>
-<ul>
-<li><p>前者通常比较高效,并可避免切割问题</p>
-</li>
-<li><p>以上规则并不适用于内置类型,以及STL迭代器和函数对象</p>
-</li>
-</ul>
-</li>
-<li><p>必须返回对象时,别妄想返回其reference</p>
-<ul>
-<li>绝不要返回pointer或reference指向一个local stack对象,或返回reference指向一个heap-allocated对象,或返回pointer或reference指向一个local static对象而有可能同时需要多个这样的对象</li>
-</ul>
-</li>
-<li><p>将成员变量声明为private</p>
-<ul>
-<li><p>这可赋予客户访问数据的一致性,可细微划分访问控制,允诺约束条件获得保证,并提供class作者以充分的实现弹性</p>
-</li>
-<li><p>protected并不比public更具封装性</p>
-</li>
-</ul>
-</li>
-<li><p>宁以non-member non-friend替换member函数</p>
-</li>
-<li><p>若所有参数皆需类型转换,请为此采用non-member函数</p>
-</li>
-<li><p>考虑写出一个不抛异常的swap函数</p>
-<ul>
-<li>调用swap时应针对std::swap使用using声明式,然后调用swap并且不带任何命名空间修饰</li>
-</ul>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2313,7 +2329,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="利用 destructors 避免泄漏资源 把资源封装在对象内，通常便可以在 exceptions 出现时避免泄漏资源。   在 constructors 内阻止资源泄漏 如果 constructors 中抛出异常，则对象没有完全构造好，C++ 拒绝为其调用 destructor。 通常只需将所有可能的 exceptions 捕捉起来，执行某种清理工作，然后重新抛出 exception，使它继续">
+<meta name="description" content="谨记 80-20 法则 一个程序 80% 的资源用于 20% 的代码身上。 找出瓶颈的可行之道是完全根据观察或实验来识别出那 20% 代码，而辨别之道就是借助某个程序分析器。   考虑使用 lazy evaluation  引用计数，避免非必要的对象复制 区分读和写，区别 operator [] 的读取和写操作 缓式取出，避免非必要的数据库读取动作 表达式缓评估，避免非必要的数值计算动作   分">
 <meta property="og:type" content="article">
-<meta property="og:title" content="异常处理">
-<meta property="og:url" content="http://yoursite.com/2018/10/28/more-eff-3/index.html">
+<meta property="og:title" content="效率">
+<meta property="og:url" content="http://yoursite.com/2018/10/28/more-eff-4/index.html">
 <meta property="og:site_name" content="唐凌肖">
-<meta property="og:description" content="利用 destructors 避免泄漏资源 把资源封装在对象内，通常便可以在 exceptions 出现时避免泄漏资源。   在 constructors 内阻止资源泄漏 如果 constructors 中抛出异常，则对象没有完全构造好，C++ 拒绝为其调用 destructor。 通常只需将所有可能的 exceptions 捕捉起来，执行某种清理工作，然后重新抛出 exception，使它继续">
+<meta property="og:description" content="谨记 80-20 法则 一个程序 80% 的资源用于 20% 的代码身上。 找出瓶颈的可行之道是完全根据观察或实验来识别出那 20% 代码，而辨别之道就是借助某个程序分析器。   考虑使用 lazy evaluation  引用计数，避免非必要的对象复制 区分读和写，区别 operator [] 的读取和写操作 缓式取出，避免非必要的数据库读取动作 表达式缓评估，避免非必要的数值计算动作   分">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-28T08:05:21.573Z">
+<meta property="og:updated_time" content="2018-10-28T16:36:55.825Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="异常处理">
-<meta name="twitter:description" content="利用 destructors 避免泄漏资源 把资源封装在对象内，通常便可以在 exceptions 出现时避免泄漏资源。   在 constructors 内阻止资源泄漏 如果 constructors 中抛出异常，则对象没有完全构造好，C++ 拒绝为其调用 destructor。 通常只需将所有可能的 exceptions 捕捉起来，执行某种清理工作，然后重新抛出 exception，使它继续">
+<meta name="twitter:title" content="效率">
+<meta name="twitter:description" content="谨记 80-20 法则 一个程序 80% 的资源用于 20% 的代码身上。 找出瓶颈的可行之道是完全根据观察或实验来识别出那 20% 代码，而辨别之道就是借助某个程序分析器。   考虑使用 lazy evaluation  引用计数，避免非必要的对象复制 区分读和写，区别 operator [] 的读取和写操作 缓式取出，避免非必要的数据库读取动作 表达式缓评估，避免非必要的数值计算动作   分">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/28/more-eff-3/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/28/more-eff-4/"/>
 
 
 
 
 
-  <title>异常处理 | 唐凌肖</title>
+  <title>效率 | 唐凌肖</title>
   
 
 
@@ -252,7 +252,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/28/more-eff-3/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/28/more-eff-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TangLingxiao">
@@ -269,7 +269,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">异常处理</h1>
+          <h1 class="post-title" itemprop="name headline">效率</h1>
         
 
         <div class="post-meta">
@@ -281,7 +281,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-28T16:04:36+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-28T17:15:05+08:00">
                 2018-10-28
               </time>
             
@@ -322,8 +322,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/10/28/more-eff-3/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/28/more-eff-3/" itemprop="commentCount"></span>
+                <a href="/2018/10/28/more-eff-4/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/28/more-eff-4/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -331,7 +331,7 @@
 
           
           
-             <span id="/2018/10/28/more-eff-3/" class="leancloud_visitors" data-flag-title="异常处理">
+             <span id="/2018/10/28/more-eff-4/" class="leancloud_visitors" data-flag-title="效率">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -363,45 +363,54 @@
 
       
         <ol>
-<li>利用 destructors 避免泄漏资源<ul>
-<li>把资源封装在对象内，通常便可以在 exceptions 出现时避免泄漏资源。</li>
+<li>谨记 80-20 法则<ul>
+<li>一个程序 80% 的资源用于 20% 的代码身上。</li>
+<li>找出瓶颈的可行之道是完全根据观察或实验来识别出那 20% 代码，而辨别之道就是借助某个程序分析器。</li>
 </ul>
 </li>
-<li>在 constructors 内阻止资源泄漏<ul>
-<li>如果 constructors 中抛出异常，则对象没有完全构造好，C++ 拒绝为其调用 destructor。</li>
-<li>通常只需将所有可能的 exceptions 捕捉起来，执行某种清理工作，然后重新抛出 exception，使它继续传播出去。</li>
-<li>使用智能指针代替 pointer class members 也可免除 constructor 内因 exceptions 的出现而发生的资源泄漏。</li>
+<li><p>考虑使用 lazy evaluation</p>
+<ul>
+<li>引用计数，避免非必要的对象复制</li>
+<li>区分读和写，区别 operator [] 的读取和写操作</li>
+<li>缓式取出，避免非必要的数据库读取动作</li>
+<li>表达式缓评估，避免非必要的数值计算动作</li>
 </ul>
 </li>
-<li>禁止异常流出 destructors 之外<ul>
-<li>它可以避免 terminate 函数在 exception 传播过程中的栈展开机制中被调用。</li>
-<li>他可以协助确保 destructors 完成其应该完成的所有事情。</li>
+<li><p>分期摊还预期的计算成本</p>
+<ul>
+<li>caching技术，将常用的数据缓存下来</li>
+<li>prefetching技术，比如容器的扩容</li>
+<li>本条款体现空间可以交换时间</li>
 </ul>
 </li>
-<li>了解 “抛出一个 exception” 与 “传递一个参数” 或 “调用一个虚函数” 之间的差异<ul>
-<li>一个对象被抛出作为 exception 时，总是会发生复制。因为对象可能离开了命名空间调用了 destructor。</li>
-<li>一般而言，必须使用 throw; 语句才能重新抛出当前的 exception，它不会改变被传播的 exception 的类型。此外，它也比较有效率，因为不需要产生新的 exception object。</li>
-<li>“抛出一个 exception” 与 “传递一个参数” 相比，前者会多构造一个 “被抛出物” 的副本。</li>
-<li>千万不要抛出一个指向局部对象的指针，因为该局部对象会在 exception 离开其 scope 时被销毁。</li>
-<li>exception 与 catch 字句相匹配过程中，仅有两种转换可以发生。一种是继承架构中的类转换，一个针对  base class exception 而编写的 catch 字句，可以处理类型为 derived class 的 exceptions。第二个允许的转换是从一个 “有型指针” 转为 “无型指针”，例如对 const void* 指针设计的 catch 字句，可捕捉所有指针类型的 exception。</li>
-<li>与调用虚函数不同，虚函数采用 best fit 策略，而 exception 处理遵循 first fit 策略。catch 子句总是依出现的顺序做匹配，因此针对 derived class 设计的 catch 子句如果出现在 base class 的 catch 子句之后，则不会被调用。</li>
+<li><p>了解临时对象的来源</p>
+<ul>
+<li>C++ 真正的所谓临时对象是不可见的——不会在你的源代码中出现。只要你产生一个 non-heap object 而没有为它命名，变产生一个临时对象。</li>
+<li>此等匿名对象通常发生于两种情况：一是当隐式类型转换被施行起来以求函数调用能够成功；二是但函数返回对象的时候。</li>
+<li>只有当对象以 by value 方式传递，或是当对象被传递给一个 reference-to-const 参数时，这些转换才会发生。如果对象被传递给一个 reference-to-non-const 参数，并不会发生此类转换。原因是发生隐式类型转换时会产生临时对象，对引用的修改实际是修改的临时对象，而不是修改的引用，与传引用参数的目的不符。</li>
+<li>任何时候只要看到一个 reference-to-const 参数，就极可能会有一个临时对象被产生出来绑定至该参数上。任何时候只要看到函数返回一个对象，就会产生临时对象。</li>
 </ul>
 </li>
-<li>以 by reference 方式捕捉 exceptions<ul>
-<li>catch by pointer 会面临捕捉的指针指向不存在对象的问题。</li>
-<li>catch by value 则会面临复制两次的问题，一次是必定会产生的 exception object，一次是传递对象的拷贝。另一个问题是引起切割问题，derived class 被视为 base class，丧失其派生成分。</li>
-<li>catch by reference 可以避免对象删除问题，也可以避开切割问题，也约束了 exception object 需被复制的次数。</li>
+<li><p>协助完成 “返回值优化（RVO）”</p>
+<ul>
+<li><p>如果函数一定得以 by-value 返回对象，你绝对无法消除之。你需要做的是努力降低被返回对象的成本。</p>
+</li>
+<li><p>返回所谓的 constructor arguments 以取代对象。这笔买卖似乎不见得多划算，因为还是必须为 “函数内的临时对象” 的构造和析构付出代价，还是必须为 “函数返回对象” 的构造和析构付出代价。但是 C++ 允许编译器将临时对象优化，使它们不存在，将 return 表达式所定义的对象构造于内存内。这样临时对象的总成本为 0 。可以将此函数声明为 inline。例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  Rational(<span class="keyword">int</span> numerator = <span class="number">0</span>, <span class="keyword">int</span> denominator = <span class="number">1</span>);</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">numerator</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">denominator</span><span class="params">()</span><span class="keyword">const</span></span>;</span><br><span class="line">    </span><br><span class="line">  <span class="comment">//返回对象最有效率的做法</span></span><br><span class="line">  <span class="keyword">inline</span> <span class="keyword">const</span> Rational <span class="keyword">operator</span>*(<span class="keyword">const</span> Rational&amp; lhs, <span class="keyword">const</span> Rational&amp; rhs)&#123;</span><br><span class="line">  	<span class="keyword">return</span> Rational(lhs.numerator() * rhs.numerator(), lhs.denominator() * 		       rhs.denominator());      </span><br><span class="line">  &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">int</span> numerator;</span><br><span class="line">  <span class="keyword">int</span> denominator;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Rational a = <span class="number">10</span>;</span><br><span class="line"><span class="function">Rational <span class="title">b</span><span class="params">(<span class="number">1</span>,<span class="number">2</span>)</span></span>;</span><br><span class="line">Rational c = a * b;<span class="comment">//编译器的返回值优化</span></span><br></pre></td></tr></table></figure>
+</li>
 </ul>
 </li>
-<li>明智运用 exception specifications<ul>
-<li>它们对希望函数抛出怎样的 exception 提供了说明，但在违反 exception specification 时会导致调用默认的unexpected，默认的 unexpected 会调用 terminate 进而调用 abort 导致程序停止。</li>
-<li>它们很容易被违反，可能会妨碍更上层的 exception 处理函数。</li>
-</ul>
+<li><p>利用重载技术避免隐式类型转换</p>
 </li>
-<li>了解异常处理的成本<ul>
-<li>为了能够在运行期处理 exceptions，需要成本，即使你从未使用关键词 try，throw 或 catch。</li>
-<li>空间成本，放置某些数据结构，记录哪些对象已被完全构造妥当。</li>
-<li>时间成本，随时保持那些数据结构的正确性。</li>
+<li><p>考虑以操作符复合形式 （op=）取代其独身形式 （op）</p>
+<ul>
+<li><p>可以以前者为基础实现后者。例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">const</span> <span class="title">T</span> <span class="title">operator</span> +（<span class="title">const</span> <span class="title">T</span>&amp; <span class="title">lhs</span>, <span class="title">const</span> <span class="title">T</span>&amp; <span class="title">rhs</span>)&#123;</span></span><br><span class="line">    <span class="keyword">return</span> T(lhs) += rhs;<span class="comment">//返回值优化</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>一般而言，复合操作符比起独身版本效率高，因为独身版本通常必须返回一个新对象，因此必须负担一个临时对象的构造和析构成本。至于复合版本则是直接将结果写入其左端自变量，不需要产生一个临时对象。</p>
+</li>
+<li><p>允许客户在效率和便利性之间取舍。</p>
+</li>
 </ul>
 </li>
 </ol>
@@ -429,8 +438,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/21/more-eff-2/" rel="next" title="操作符">
-                <i class="fa fa-chevron-left"></i> 操作符
+              <a href="/2018/10/28/more-eff-3/" rel="next" title="异常处理">
+                <i class="fa fa-chevron-left"></i> 异常处理
               </a>
             
           </div>
@@ -438,10 +447,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/28/more-eff-4/" rel="prev" title="效率">
-                效率 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
